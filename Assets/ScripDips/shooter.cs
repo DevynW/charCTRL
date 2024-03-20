@@ -13,6 +13,6 @@ public class shooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.Translate (4 * Time.deltaTime * Vector3.right);
+        gameObject.transform.Translate (4 * Time.deltaTime * Vector3.right, Space.Self);
     }
 }
