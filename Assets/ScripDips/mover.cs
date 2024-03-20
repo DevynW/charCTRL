@@ -11,10 +11,13 @@ public class mover : MonoBehaviour
     [SerializeField] GameObject leftbullet;
     Animator animator;
     SpriteRenderer sr;
+    enum Directions { left, right, down, up }
+    Directions direction;
     // Start is called before the first frame update
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+        direction = Directions.right;
 
         animator = GetComponent<Animator>();
     }
@@ -22,18 +25,15 @@ public class mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         //Movers here:
         if (Input.GetKey(KeyCode.UpArrow))
         {
             animator.SetBool("up", Input.GetKey(KeyCode.UpArrow));
             sr.flipX = false;
             gameObject.transform.Translate(speed* Time.deltaTime * Vector3.up);
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Vector3 shoot = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-                Instantiate(upbullet, shoot, upbullet.transform.rotation);
-            }
+            direction = Directions.up;
+           
         }
         else
         {
@@ -45,13 +45,8 @@ public class mover : MonoBehaviour
             animator.SetBool("down", Input.GetKey(KeyCode.DownArrow));
             sr.flipX = false;
             gameObject.transform.Translate(speed * Time.deltaTime * Vector3.down);
+            direction = Directions.down;
 
-            //Shooter here:
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Vector3 shoot = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-                Instantiate(downbullet, shoot, downbullet.transform.rotation);
-            }
         }
         else
         {
@@ -63,13 +58,7 @@ public class mover : MonoBehaviour
             animator.SetBool("right", Input.GetKey(KeyCode.RightArrow));
             sr.flipX = false;
             gameObject.transform.Translate(speed * Time.deltaTime * Vector3.right);
-
-            //Shooter here:
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Vector3 shoot = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-                Instantiate(rightbullet, shoot, rightbullet.transform.rotation);
-            }
+            direction = Directions.right;
         }
         else
         {
@@ -81,12 +70,7 @@ public class mover : MonoBehaviour
             animator.SetBool("left", Input.GetKey(KeyCode.LeftArrow));
             sr.flipX = true;
             gameObject.transform.Translate(speed * Time.deltaTime * Vector3.left);
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Vector3 shoot = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-                Instantiate(leftbullet, shoot, leftbullet.transform.rotation);
-            }
+            direction = Directions.left;
         }
         else
         {
@@ -108,7 +92,28 @@ public class mover : MonoBehaviour
             gameObject.transform.position = teleport;
         }
 
-        
+        //Shooter here:
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameObject newbullet = Instantiate(rightbullet, gameObject.transform.position + new Vector3 (0f, 0.18f, 0f), gameObject.transform.rotation);
+            if (direction == Directions.up)
+            {
+                newbullet.transform.Rotate(0f, 0f, 90f);
+            }
+            if (direction == Directions.down)
+            {
+                newbullet.transform.Rotate(0f, 0f, 270f);
+            }
+            if (direction == Directions.left)
+            {
+                newbullet.transform.Rotate(0f, 0f, 180f);
+            }
+            if (direction == Directions.right)
+            {
+                newbullet.transform.Rotate(0f, 0f, 0f);
+            }
+
+        }
 
     }
 }
